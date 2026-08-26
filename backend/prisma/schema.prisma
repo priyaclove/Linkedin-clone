@@ -8,12 +8,24 @@ datasource db {
 }
 
 model User {
-  id        Int      @id @default(autoincrement())
-  username  String   @unique
-  email     String   @unique
-  password  String
+  id       Int    @id @default(autoincrement())
+  username String @unique
+  email    String @unique
+  password String
 
+  // Profile
+  about        String?
+  profileImage String?
+  coverImage   String?
+  city         String?
+  state        String?
+  country      String?
+  phone        String?
+
+  // Relationships
   posts     Post[]
+  skills    UserSkill[]
+  interests UserInterest[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -29,4 +41,42 @@ model Post {
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+}
+
+model Skill {
+  id    Int         @id @default(autoincrement())
+  name  String      @unique
+
+  users UserSkill[]
+}
+
+model UserSkill {
+  id      Int @id @default(autoincrement())
+
+  userId  Int
+  skillId Int
+
+  user  User  @relation(fields: [userId], references: [id], onDelete: Cascade)
+  skill Skill @relation(fields: [skillId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, skillId])
+}
+
+model Interest {
+  id    Int            @id @default(autoincrement())
+  name  String         @unique
+
+  users UserInterest[]
+}
+
+model UserInterest {
+  id         Int @id @default(autoincrement())
+
+  userId     Int
+  interestId Int
+
+  user     User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  interest Interest @relation(fields: [interestId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, interestId])
 }

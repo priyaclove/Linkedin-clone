@@ -22,7 +22,7 @@ export const getPosts = async (req, res) => {
 // POST /api/posts  → create a post for a given author
 export const createPost = async (req, res) => {
   try {
-    const { content, imageUrl, authorId } = req.body;
+    const { content, authorId } = req.body;
 
     if (!content || !content.trim()) {
       return res.status(400).json({ message: "Post content is required" });
@@ -32,10 +32,15 @@ export const createPost = async (req, res) => {
       return res.status(400).json({ message: "You must be logged in to post" });
     }
 
+    // Prefer an uploaded file; fall back to an imageUrl string in the body.
+    const imageUrl = req.file
+      ? `/uploads/posts/${req.file.filename}`
+      : req.body.imageUrl || null;
+
     const post = await prisma.post.create({
       data: {
         content: content.trim(),
-        imageUrl: imageUrl || null,
+        imageUrl,
         authorId: Number(authorId),
       },
       include: {

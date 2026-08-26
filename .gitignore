@@ -1,0 +1,15 @@
+# Dependencies
+node_modules/
+
+# Next.js build output
+.next/
+
+# Env files
+.env
+.env.local
+
+# OS files
+.DS_Store
+
+# Uploaded user images (backend)
+backend/uploads/
