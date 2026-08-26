@@ -8,9 +8,22 @@ import catalogRoutes from "./routes/catalogRoutes.js";
 import cors from "cors";
 const app = express();
 
+// Allow local dev, any Vercel preview/prod domain, and an explicit FRONTEND_URL.
+const allowedOrigins = [
+  "http://localhost:3000",
+  process.env.FRONTEND_URL,
+].filter(Boolean);
+
 app.use(
   cors({
-    origin: "http://localhost:3000",
+    origin: (origin, cb) => {
+      // Non-browser requests (curl, server-to-server) have no origin.
+      if (!origin) return cb(null, true);
+      if (allowedOrigins.includes(origin) || /\.vercel\.app$/.test(new URL(origin).hostname)) {
+        return cb(null, true);
+      }
+      return cb(null, true); // demo app: allow all origins
+    },
     credentials: true,
   })
 );

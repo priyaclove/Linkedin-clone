@@ -211,8 +211,10 @@ export const updateProfileImage = async (req, res) => {
     // DELETE OLD IMAGE
     deleteImageFile(user.profileImage);
 
-    // NEW IMAGE PATH
-    const imagePath = `/uploads/profiles/${req.file.filename}`;
+    // NEW IMAGE PATH (Cloudinary URL in prod, /uploads path in local dev)
+    const imagePath = req.file.path?.startsWith("http")
+      ? req.file.path
+      : `/uploads/profiles/${req.file.filename}`;
 
     // SAVE PATH TO DATABASE
     const updatedUser = await prisma.user.update({
@@ -308,7 +310,9 @@ export const updateCoverImage = async (req, res) => {
     deleteImageFile(user.coverImage);
 
     // NEW COVER PATH
-    const imagePath = `/uploads/covers/${req.file.filename}`;
+    const imagePath = req.file.path?.startsWith("http")
+      ? req.file.path
+      : `/uploads/covers/${req.file.filename}`;
 
     // SAVE TO DATABASE
     const updatedUser = await prisma.user.update({

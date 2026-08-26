@@ -16,6 +16,18 @@ const nextConfig: NextConfig = {
         hostname: "**.trycloudflare.com",
         pathname: "/uploads/**",
       },
+      {
+        // Images uploaded to Cloudinary (production storage).
+        protocol: "https",
+        hostname: "res.cloudinary.com",
+        pathname: "/**",
+      },
+      {
+        // Backend deployed on Render (serves /uploads in dev fallback).
+        protocol: "https",
+        hostname: "**.onrender.com",
+        pathname: "/uploads/**",
+      },
     ],
   },
 };

@@ -33,9 +33,14 @@ export const createPost = async (req, res) => {
     }
 
     // Prefer an uploaded file; fall back to an imageUrl string in the body.
-    const imageUrl = req.file
-      ? `/uploads/posts/${req.file.filename}`
-      : req.body.imageUrl || null;
+    // Cloudinary returns a full https URL in req.file.path; disk storage uses a
+    // relative /uploads path.
+    let imageUrl = req.body.imageUrl || null;
+    if (req.file) {
+      imageUrl = req.file.path?.startsWith("http")
+        ? req.file.path
+        : `/uploads/posts/${req.file.filename}`;
+    }
 
     const post = await prisma.post.create({
       data: {
