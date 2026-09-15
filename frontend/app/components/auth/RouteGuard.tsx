@@ -17,6 +17,7 @@ const PROTECTED_PREFIXES = [
   "/games",
   "/top-content",
   "/events",
+  "/analytics",
 ];
 
 function isProtected(pathname: string): boolean {
